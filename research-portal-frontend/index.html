@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Opportunity Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: '#1C2B3A',
+          inksoft: '#5B6775',
+          paper: '#F7F3EA',
+          paper2: '#EFE9DA',
+          rule: '#D8D1BE',
+          gold: '#A9782C',
+          goldsoft: '#F1E6CE',
+          open: '#3F6B4F',
+          opensoft: '#E4EDE6',
+          closed: '#8B4A3D',
+          closedsoft: '#F1E1DC',
+        },
+        fontFamily: {
+          serif: ['"Source Serif 4"', 'Georgia', 'serif'],
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  body { background-color: #F7F3EA; }
+  .row-divider { border-bottom: 1px solid #D8D1BE; }
+  ::selection { background: #F1E6CE; }
+</style>
+</head>
+<body class="font-sans text-ink min-h-screen">
+
+  <!-- Header -->
+  <header class="border-b border-rule bg-paper">
+    <div class="max-w-4xl mx-auto px-6 py-8 flex items-end justify-between flex-wrap gap-4">
+      <div>
+        <p class="text-xs tracking-wide text-inksoft mb-1">National University of Computer &amp; Emerging Sciences</p>
+        <h1 class="font-serif text-3xl font-semibold text-ink">Research Opportunity Portal</h1>
+      </div>
+      <button id="newOppBtn"
+        class="bg-ink text-paper px-5 py-2.5 text-sm font-medium hover:bg-[#2A3D52] transition-colors">
+        + Post Opportunity
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-8">
+
+    <!-- Status filter tabs -->
+    <div class="flex items-center gap-6 mb-6 text-sm">
+      <button data-filter="all" class="filter-tab font-medium text-ink border-b-2 border-ink pb-1">All</button>
+      <button data-filter="Open" class="filter-tab text-inksoft hover:text-ink pb-1 border-b-2 border-transparent">Open</button>
+      <button data-filter="Closed" class="filter-tab text-inksoft hover:text-ink pb-1 border-b-2 border-transparent">Closed</button>
+      <span id="countLabel" class="ml-auto text-xs text-inksoft"></span>
+    </div>
+
+    <!-- List -->
+    <div id="listContainer" class="border-t border-rule"></div>
+
+    <!-- Empty state -->
+    <div id="emptyState" class="hidden text-center py-20 text-inksoft">
+      <p class="font-serif text-lg text-ink mb-1">No opportunities posted yet</p>
+      <p class="text-sm">Use "Post Opportunity" above to add the first listing.</p>
+    </div>
+
+    <!-- Loading state -->
+    <div id="loadingState" class="text-center py-20 text-inksoft text-sm">Loading opportunities…</div>
+
+  </main>
+
+  <!-- Detail panel (slide-over) -->
+  <div id="detailOverlay" class="fixed inset-0 bg-ink/40 hidden z-40"></div>
+  <aside id="detailPanel"
+    class="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-paper border-l border-rule z-50 translate-x-full transition-transform duration-300 overflow-y-auto">
+    <div class="p-6" id="detailContent"></div>
+  </aside>
+
+  <!-- Create / Edit form modal -->
+  <div id="formOverlay" class="fixed inset-0 bg-ink/40 hidden z-40 flex items-center justify-center p-4">
+    <div class="bg-paper border border-rule max-w-lg w-full max-h-[90vh] overflow-y-auto">
+      <div class="px-6 py-5 border-b border-rule flex items-center justify-between">
+        <h2 id="formTitle" class="font-serif text-xl font-semibold">Post an Opportunity</h2>
+        <button id="closeFormBtn" class="text-inksoft hover:text-ink text-xl leading-none">&times;</button>
+      </div>
+      <form id="oppForm" class="p-6 space-y-4">
+        <input type="hidden" id="oppId">
+
+        <div>
+          <label class="block text-xs font-medium text-inksoft mb-1">Research Title *</label>
+          <input id="f_title" required class="w-full border border-rule bg-white px-3 py-2 text-sm focus:outline-none focus:border-gold">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-inksoft mb-1">Description *</label>
+          <textarea id="f_description" required rows="3" class="w-full border border-rule bg-white px-3 py-2 text-sm focus:outline-none focus:border-gold"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-inksoft mb-1">Research Area *</label>
+            <input id="f_research_area" required class="w-full border border-rule bg-white px-3 py-2 text-sm focus:outline-none focus:border-gold">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-inksoft mb-1">Department *</label>
+            <input id="f_department" required class="w-full border border-rule bg-white px-3 py-2 text-sm focus:outline-none focus:border-gold">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-inksoft mb-1">Faculty Member Name *</label>
+          <input id="f_faculty_name" required class="w-full border border-rule bg-white px-3 py-2 text-sm focus:outline-none focus:border-gold">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-inksoft mb-1">Required Skills *</label>
+          <input id="f_required_skills" required placeholder="e.g. Python, TensorFlow, Data Analysis"
+            class="w-full border border-rule bg-white px-3 py-2 text-sm focus:outline-none focus:border-gold">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-inksoft mb-1">Available Positions *</label>
+            <input id="f_available_positions" type="number" min="1" required class="w-full border border-rule bg-white px-3 py-2 text-sm focus:outline-none focus:border-gold">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-inksoft mb-1">Application Deadline *</label>
+            <input id="f_application_deadline" type="date" required class="w-full border border-rule bg-white px-3 py-2 text-sm focus:outline-none focus:border-gold">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-inksoft mb-1">Status *</label>
+          <select id="f_status" required class="w-full border border-rule bg-white px-3 py-2 text-sm focus:outline-none focus:border-gold">
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+
+        <p id="formError" class="hidden text-sm text-closed"></p>
+
+        <div class="flex gap-3 pt-2">
+          <button type="submit" class="bg-ink text-paper px-5 py-2.5 text-sm font-medium hover:bg-[#2A3D52] transition-colors">
+            Save
+          </button>
+          <button type="button" id="cancelFormBtn" class="px-5 py-2.5 text-sm font-medium text-inksoft hover:text-ink">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 hidden z-50 px-4 py-3 text-sm font-medium shadow-lg"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
