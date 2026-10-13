@@ -168,3 +168,8 @@ def delete_opportunity(opp_id: int):
     cursor.close()
     conn.close()
     return {"message": "Opportunity deleted successfully"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

@@ -1,0 +1,115 @@
+{
+  "info": {
+    "_postman_id": "14353fb4-9449-4722-a0fc-4a123d2a07e3",
+    "name": "University Research Opportunity Portal",
+    "description": "Full CRUD API collection for the Research Opportunity Portal.\n\nBase URL: http://127.0.0.1:8000\n\nEndpoints:\n- GET    /api/opportunities       — List all opportunities\n- GET    /api/opportunities/:id   — Get one opportunity by ID\n- POST   /api/opportunities       — Create a new opportunity\n- PUT    /api/opportunities/:id   — Update an existing opportunity\n- DELETE /api/opportunities/:id   — Delete an opportunity",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40647485"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Get All Opportunities",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/opportunities",
+          "host": ["{{base_url}}"],
+          "path": ["api", "opportunities"]
+        },
+        "description": "Retrieve a list of all research opportunities."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Opportunity by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/opportunities/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "opportunities", "1"]
+        },
+        "description": "Retrieve a single research opportunity by its ID. Returns 404 if not found."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Opportunity",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Cloud Computing Research\",\n  \"description\": \"Investigating serverless architectures for scalable university applications.\",\n  \"research_area\": \"Cloud Computing\",\n  \"faculty_name\": \"Dr. Fatima Noor\",\n  \"department\": \"Computer Science\",\n  \"required_skills\": \"AWS, Docker, Kubernetes\",\n  \"available_positions\": 3,\n  \"application_deadline\": \"2027-03-01\",\n  \"status\": \"Open\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/opportunities",
+          "host": ["{{base_url}}"],
+          "path": ["api", "opportunities"]
+        },
+        "description": "Create a new research opportunity. All fields except required_skills are required. Status defaults to 'Open' if not provided."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Opportunity",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Cloud Computing Research (Updated)\",\n  \"status\": \"Closed\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/opportunities/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "opportunities", "1"]
+        },
+        "description": "Update an existing research opportunity. Only include the fields you want to change (partial update). Returns 404 if the opportunity does not exist."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Opportunity",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/opportunities/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "opportunities", "1"]
+        },
+        "description": "Delete a research opportunity by its ID. Returns 404 if the opportunity does not exist."
+      },
+      "response": []
+    }
+  ]
+}
